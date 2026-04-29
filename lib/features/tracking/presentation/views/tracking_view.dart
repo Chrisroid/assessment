@@ -5,7 +5,7 @@ import '../widgets/tracking_map.dart';
 import '../widgets/bottom_info_sheet.dart';
 import '../widgets/draggable_floating_sheet.dart';
 
-final mapThemeProvider = StateProvider<bool>((ref) => true);
+final mapThemeProvider = StateProvider<bool>((ref) => false);
 
 class TrackingView extends ConsumerWidget {
   const TrackingView({super.key});

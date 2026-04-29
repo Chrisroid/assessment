@@ -12,7 +12,7 @@ class TrackingMap extends StatelessWidget {
     super.key,
     required this.route,
     this.currentLocation,
-    this.isDarkMode = true,
+    this.isDarkMode = false,
   });
 
   @override
