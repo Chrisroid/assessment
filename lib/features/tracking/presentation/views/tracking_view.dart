@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/theme/design_system.dart';
 import '../viewmodels/tracking_viewmodel.dart';
 import '../widgets/tracking_map.dart';
 import '../widgets/bottom_info_sheet.dart';
@@ -14,6 +15,7 @@ class TrackingView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final trackingState = ref.watch(trackingViewModelProvider);
     final isDarkMode = ref.watch(mapThemeProvider);
+    final ds = ref.watch(designSystemProvider);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -23,18 +25,21 @@ class TrackingView extends ConsumerWidget {
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Container(
-            decoration: const BoxDecoration(
-              color: Colors.white,
+            decoration: BoxDecoration(
+              color: ds.colors.background,
               shape: BoxShape.circle,
-              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)]
+              boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4)]
             ),
             child: IconButton(
-              icon: const Icon(Icons.arrow_back_ios_new, size: 18, color: Colors.black),
+              icon: Icon(Icons.arrow_back_ios_new, size: 18, color: ds.colors.textPrimary),
               onPressed: () {},
             ),
           ),
         ),
-        title: const Text('Live Tracking', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        title: Text(
+          'Live Tracking',
+          style: ds.typography.heading,
+        ),
         centerTitle: true,
       ),
       body: Stack(
@@ -64,13 +69,13 @@ class TrackingView extends ConsumerWidget {
         padding: const EdgeInsets.only(top: 80.0),
         child: FloatingActionButton(
           mini: true,
-          backgroundColor: Colors.white,
+          backgroundColor: ds.colors.background,
           onPressed: () {
             ref.read(mapThemeProvider.notifier).state = !isDarkMode;
           },
           child: Icon(
             isDarkMode ? Icons.light_mode : Icons.dark_mode,
-            color: Colors.black87,
+            color: ds.colors.textPrimary,
           ),
         ),
       ),

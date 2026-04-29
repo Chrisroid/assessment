@@ -1,13 +1,17 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../core/theme/design_system.dart';
 import '../../domain/entities/delivery_state_entity.dart';
 
-class BottomInfoSheet extends StatelessWidget {
+class BottomInfoSheet extends ConsumerWidget {
   final DeliveryStateEntity state;
 
   const BottomInfoSheet({super.key, required this.state});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final ds = ref.watch(designSystemProvider);
     return Container(
       margin: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
       decoration: BoxDecoration(
@@ -37,13 +41,9 @@ class BottomInfoSheet extends StatelessWidget {
                 Expanded(
                   child: Text(
                     state.etaMessage,
-                    style: const TextStyle(
-                      fontFamily: 'Inter',
-                      fontWeight: FontWeight.w400,
-                      fontSize: 12,
-                      height: 18 / 12,
-                      // line-height: 18px
-                      color: Color(0xE51B1C1E),
+                    style: ds.typography.caption.copyWith(
+                      color: ds.colors.textPrimary.withOpacity(0.9),
+                      height: 1.5,
                     ),
                   ),
                 ),
@@ -56,7 +56,7 @@ class BottomInfoSheet extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: 6.0),
             padding: const EdgeInsets.fromLTRB(8, 16, 8, 16),
             decoration: BoxDecoration(
-              color: Color(0xffd1d2d2).withAlpha(26),
+              color: ds.colors.textSecondary.withOpacity(0.1),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Column(
@@ -74,21 +74,11 @@ class BottomInfoSheet extends StatelessWidget {
                         children: [
                           Text(
                             state.courierName,
-                            style: const TextStyle(
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16,
-                              color: Color(0xFF1B1C1E),
-                            ),
+                            style: ds.typography.heading,
                           ),
                           Text(
                             state.courierRole,
-                            style: const TextStyle(
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w400,
-                              fontSize: 14,
-                              color: Color(0xFFB3B3B4),
-                            ),
+                            style: ds.typography.subtitle,
                           ),
                         ],
                       ),
@@ -96,9 +86,8 @@ class BottomInfoSheet extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () {},
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFFF4500),
-                        // Bright Orange
-                        foregroundColor: Colors.white,
+                        backgroundColor: ds.colors.activeIndicator,
+                        foregroundColor: ds.colors.background,
                         elevation: 0,
                         padding: const EdgeInsets.only(
                           left: 6,
@@ -115,23 +104,21 @@ class BottomInfoSheet extends StatelessWidget {
                         children: [
                           Container(
                             padding: const EdgeInsets.all(3),
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
+                            decoration: BoxDecoration(
+                              color: ds.colors.background,
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(
+                            child: Icon(
                               Icons.phone_outlined,
                               size: 16,
-                              color: Color(0xFFFF4500),
+                              color: ds.colors.activeIndicator,
                             ),
                           ),
                           const SizedBox(width: 8),
-                          const Text(
+                          Text(
                             'Call',
-                            style: TextStyle(
-                              fontFamily: 'Inter',
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
+                            style: ds.typography.title.copyWith(
+                              color: ds.colors.background,
                             ),
                           ),
                         ],
@@ -155,22 +142,12 @@ class BottomInfoSheet extends StatelessWidget {
                             children: [
                               Text(
                                 'Order ID',
-                                style: const TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w400,
-                                  fontSize: 12,
-                                  color: Color(0xFFB3B3B4),
-                                ),
+                                style: ds.typography.caption,
                               ),
                               const SizedBox(height: 4),
                               Text(
                                 state.orderId,
-                                style: const TextStyle(
-                                  fontFamily: 'Inter',
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14,
-                                  color: Color(0xFF1B1C1E),
-                                ),
+                                style: ds.typography.title,
                               ),
                             ],
                           ),
@@ -180,21 +157,20 @@ class BottomInfoSheet extends StatelessWidget {
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: const Color(0xffF5811F).withAlpha(12),
+                              color: ds.colors.badgeBackground,
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Row(
                               children: [
-                                const CircleAvatar(
+                                CircleAvatar(
                                   radius: 4,
-                                  backgroundColor: Color(0xfff5811f),
+                                  backgroundColor: ds.colors.primary,
                                 ),
                                 const SizedBox(width: 6),
-                                const Text(
+                                Text(
                                   'On Delivery',
-                                  style: TextStyle(
-                                    color: Color(0xfff5811f),
-                                    fontSize: 12,
+                                  style: ds.typography.body.copyWith(
+                                    color: ds.colors.primary,
                                   ),
                                 ),
                               ],
@@ -206,6 +182,7 @@ class BottomInfoSheet extends StatelessWidget {
 
                       // Timeline steps
                       _buildTimelineStep(
+                        ds,
                         isActive: true,
                         title: 'On Delivery',
                         subtitle: 'Courier is delivering the package',
@@ -214,6 +191,7 @@ class BottomInfoSheet extends StatelessWidget {
                         isLast: false,
                       ),
                       _buildTimelineStep(
+                        ds,
                         isActive: false,
                         title: 'Delivered',
                         subtitle: state.destinationAddress,
@@ -244,7 +222,8 @@ class BottomInfoSheet extends StatelessWidget {
     );
   }
 
-  Widget _buildTimelineStep({
+  Widget _buildTimelineStep(
+    DesignSystem ds, {
     required bool isActive,
     required String title,
     required String subtitle,
@@ -263,7 +242,7 @@ class BottomInfoSheet extends StatelessWidget {
               height: 24,
             ),
             if (!isLast)
-              Container(width: 2, height: 40, color: Colors.grey[300]),
+              Container(width: 2, height: 40, color: ds.colors.inactiveIndicator),
           ],
         ),
         const SizedBox(width: 16),
@@ -273,21 +252,15 @@ class BottomInfoSheet extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  color:  const Color(0xFFB3B3B4),
-                  fontWeight: FontWeight.w400,
-                  fontSize:  12,
+                style: ds.typography.caption.copyWith(
+                  color: isActive ? ds.colors.textPrimary : ds.colors.textSecondary,
                 ),
               ),
               const SizedBox(height: 4),
               Text(
                 subtitle,
-                style: TextStyle(
-                  fontFamily: 'Inter',
-                  color:  const Color(0xFF1B1C1E) ,
-                  fontWeight: FontWeight.w500 ,
-                  fontSize: 14,
+                style: ds.typography.title.copyWith(
+                  color: isActive ? ds.colors.textPrimary : ds.colors.textSecondary,
                 ),
               ),
             ],
@@ -298,20 +271,13 @@ class BottomInfoSheet extends StatelessWidget {
           children: [
             Text(
               time,
-              style: const TextStyle(
-                fontFamily: 'Inter',
-                fontWeight: FontWeight.w400,
-                fontSize: 12,
-                color: Color(0xFFB3B3B4),
-              ),
+              style: ds.typography.caption,
             ),
             Text(
               date,
-              style: TextStyle(
-                fontFamily: 'Inter',
-                fontWeight:  FontWeight.w500 ,
+              style: ds.typography.title.copyWith(
                 fontSize: isActive ? 14 : 12,
-                color:  const Color(0xFF1B1C1E) ,
+                color: isActive ? ds.colors.textPrimary : ds.colors.textSecondary,
               ),
             ),
           ],

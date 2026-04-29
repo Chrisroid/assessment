@@ -1,9 +1,12 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
+import '../../../../core/theme/design_system.dart';
 import '../../domain/entities/location_entity.dart';
 
-class TrackingMap extends StatelessWidget {
+class TrackingMap extends ConsumerWidget {
   final List<LocationEntity> route;
   final LocationEntity? currentLocation;
   final bool isDarkMode;
@@ -16,7 +19,8 @@ class TrackingMap extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final ds = ref.watch(designSystemProvider);
     if (route.isEmpty) return const SizedBox.shrink();
 
     final polylinePoints = route.map((loc) => LatLng(loc.latitude, loc.longitude)).toList();
@@ -40,7 +44,7 @@ class TrackingMap extends StatelessWidget {
             Polyline(
               points: polylinePoints,
               strokeWidth: 6.0,
-              color: Colors.deepOrange,
+              color: ds.colors.activeIndicator,
             ),
           ],
         ),
@@ -52,8 +56,8 @@ class TrackingMap extends StatelessWidget {
               width: 40,
               height: 40,
               child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
+                decoration: BoxDecoration(
+                  color: ds.colors.background,
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(Icons.location_on, color: Colors.red, size: 30),
@@ -72,7 +76,7 @@ class TrackingMap extends StatelessWidget {
                     fit: BoxFit.contain,
                     // Fallback icon in case the image isn't loaded yet or is missing
                     errorBuilder: (context, error, stackTrace) =>
-                    const Icon(Icons.motorcycle, color: Colors.deepOrange, size: 24),
+                        Icon(Icons.motorcycle, color: ds.colors.activeIndicator, size: 24),
                   ),
                 ),
               ),

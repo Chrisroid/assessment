@@ -4,6 +4,7 @@ import '../../domain/entities/location_entity.dart';
 import '../../domain/entities/delivery_state_entity.dart';
 import '../../domain/repositories/tracking_repository.dart';
 import '../../data/repositories/tracking_repository_impl.dart';
+import '../../domain/usecases/tracking_usecases.dart';
 
 part 'tracking_viewmodel.g.dart';
 
@@ -55,18 +56,16 @@ class TrackingViewModel extends _$TrackingViewModel {
   }
 
   Future<void> _fetchInitialData() async {
-    final repo = ref.read(trackingRepositoryProvider);
-    
     // Fetch route
     try {
-      final route = await repo.getRoutePath();
+      final route = await ref.read(getRoutePathProvider).call();
       state = state.copyWith(route: AsyncValue.data(route));
     } catch (e, st) {
       state = state.copyWith(route: AsyncValue.error(e, st));
     }
 
     // Fetch delivery state stream
-    repo.getDeliveryStateStream().listen(
+    ref.read(getDeliveryStateStreamProvider).call().listen(
       (data) {
         state = state.copyWith(deliveryState: AsyncValue.data(data));
       },
@@ -76,7 +75,7 @@ class TrackingViewModel extends _$TrackingViewModel {
     );
 
     // Listen to live location
-    _locationSub = repo.getLiveLocationStream().listen((location) {
+    _locationSub = ref.read(getLiveLocationStreamProvider).call().listen((location) {
       state = state.copyWith(currentLocation: location);
     });
   }
