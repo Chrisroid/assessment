@@ -21,7 +21,7 @@ A production-ready Flutter application demonstrating a high-fidelity, Uber-style
 
 > **Demo Video:** *[Insert Link to Video Here]*
 
-> **Download APK:** *[Insert Link to APK Here]*
+> **Download APK:** *[[Link to APK Here](https://drive.google.com/file/d/14PIdcxl7KUCXtAdlpd_tDTPY-nXVcRdZ/view?usp=sharing)]*
 
 ## 🧠 Architectural Decisions
 
